@@ -1,17 +1,21 @@
 import { useState } from "react";
+import Loading from "../components/Loading";
+import ObjectList from "../components/ObjectList";
+import SearchBar from "../components/SearchBar";
+import { Search } from "../api/sciencemuseumtypes";
 
 function HomePage() {
-  const [example, setExample] = useState(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchResult, setSearchResult] = useState<Search>({
+    total: 0,
+    objectIDs: [],
+  });
 
   return (
     <section className="flex flex-col items-center">
-      <h1 className="font-sans text-xl p-2">Current value: {example}</h1>
-      <button
-        className="w-32 border-2 rounded-xl shadow bg-white hover:bg-gray-100"
-        onClick={() => setExample((i) => i + 1)}
-      >
-        <p className="p-2">Click me</p>
-      </button>
+      <SearchBar setSearchedObjects={setSearchResult} setLoading={setLoading} />
+      {loading ? <Loading /> : null}
+      <ObjectList searchResult={searchResult} setLoading={setLoading} />
     </section>
   );
 }
