@@ -1,8 +1,10 @@
 import { useState } from "react";
+
+import { Search } from "../api/metmuseumtypes";
+
 import Loading from "../components/Loading";
 import ObjectList from "../components/ObjectList";
 import SearchBar from "../components/SearchBar";
-import { Search } from "../api/sciencemuseumtypes";
 
 function HomePage() {
   const [loading, setLoading] = useState<boolean>(false);

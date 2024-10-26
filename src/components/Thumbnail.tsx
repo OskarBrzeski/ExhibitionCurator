@@ -1,7 +1,15 @@
 type Props = { imageURL: string };
 
 function Thumbnail({ imageURL }: Props) {
-  return <img className="w-20 h-20 rounded border m-4" src={imageURL} alt="" />;
+  if (imageURL !== "") {
+    return <img className="w-28 h-28 rounded border" src={imageURL} alt="" />;
+  } else {
+    return (
+      <section className="w-28 h-28 rounded border text-center">
+        <p className="align-middle my-8">No Image Available</p>
+      </section>
+    );
+  }
 }
 
 export default Thumbnail;

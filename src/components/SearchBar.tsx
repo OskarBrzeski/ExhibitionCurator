@@ -1,9 +1,10 @@
 import { FormEvent, ReactElement, useState } from "react";
-import { search } from "../api/sciencemuseum";
-import { SetState } from "../utils/types";
-import { Search } from "../api/sciencemuseumtypes";
 
-type submitEvent = FormEvent<HTMLFormElement>;
+import { SetState } from "../utils/types";
+import { search } from "../api/metmuseum";
+import { Search } from "../api/metmuseumtypes";
+
+type SubmitEvent = FormEvent<HTMLFormElement>;
 type Props = {
   setSearchedObjects: SetState<Search>;
   setLoading: SetState<boolean>;
@@ -12,7 +13,7 @@ type Props = {
 function SearchBar({ setSearchedObjects, setLoading }: Props): ReactElement {
   const [searchTerms, setSearchTerms] = useState<string>("");
 
-  function handleSubmit(event: submitEvent) {
+  function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
     setLoading(true);
 

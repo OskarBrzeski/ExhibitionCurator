@@ -1,27 +1,33 @@
-import { ReactElement, useEffect, useState } from "react";
-import { Object, Search } from "../api/sciencemuseumtypes";
-import ObjectCard from "./ObjectCard";
-import { object } from "../api/sciencemuseum";
-import { SetState } from "../utils/types";
+import { ChangeEvent, ReactElement, useEffect, useState } from "react";
 
+import { SetState } from "../utils/types";
+import { object } from "../api/metmuseum";
+import { Object, Search } from "../api/metmuseumtypes";
+
+import ObjectCard from "./ObjectCard";
+import PageButtons from "./PageButtons";
+
+type SelectEvent = ChangeEvent<HTMLSelectElement>;
 type Props = { searchResult: Search; setLoading: SetState<boolean> };
 
 function ObjectList({ searchResult, setLoading }: Props) {
   const [objects, setObjects] = useState<(Object | null)[]>([]);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(5);
   const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
+    setObjects([]);
     const start = (page - 1) * pageSize + 1;
     const end = start + pageSize;
-    console.log(searchResult.objectIDs.slice(start, end));
+    console.log(pageSize, page);
+    console.log(searchResult.objectIDs.length);
 
     Promise.all(
-      searchResult.objectIDs.slice(start, end).map(getObjectByID),
+      searchResult.objectIDs.slice(start, end).map(getObjectByID)
     ).then(() => {
       setLoading(false);
     });
-  }, [searchResult]);
+  }, [searchResult, page, pageSize]);
 
   function getObjectByID(objectID: number, index: number) {
     object(objectID).then((data) => {
@@ -39,9 +45,11 @@ function ObjectList({ searchResult, setLoading }: Props) {
         return null;
       }
       return (
-        <li key={obj.objectID} className="border rounded mx-2">
-          <ObjectCard imageURL={obj.primaryImage} title={obj.title} />
-        </li>
+        <ObjectCard
+          key={obj.objectID.toString()}
+          imageURL={obj.primaryImage}
+          title={obj.title}
+        />
       );
     });
   }
@@ -54,14 +62,33 @@ function ObjectList({ searchResult, setLoading }: Props) {
     return count;
   }
 
+  function selectPageSize(event: SelectEvent) {
+    setPageSize(+event.target.value);
+  }
+
   return (
     <>
-      <ol className="flex flex-col gap-y-2">{objectsToElements()}</ol>
+      <section className="flex my-2">
+        <span className="pr-2">Objects per page:</span>
+        <select
+          className="px-1"
+          name="pagesize"
+          id="pagesize"
+          onChange={selectPageSize}
+        >
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+        </select>
+      </section>
+      <ol className="flex flex-col gap-y-2 mx-2">{objectsToElements()}</ol>
       {objects.includes(null) && (
         <p>
           {failedToLoad()} object{failedToLoad() > 1 ? "s" : ""} failed to load
         </p>
       )}
+      <PageButtons page={page} setPage={setPage} />
     </>
   );
 }
