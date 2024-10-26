@@ -17,7 +17,7 @@ function ObjectList({ searchResult, setLoading }: Props) {
 
   useEffect(() => {
     setObjects([]);
-    const start = (page - 1) * pageSize + 1;
+    const start = (page - 1) * pageSize;
     const end = start + pageSize;
 
     Promise.all(
@@ -45,6 +45,7 @@ function ObjectList({ searchResult, setLoading }: Props) {
       return (
         <ObjectCard
           key={obj.objectID.toString()}
+          id={obj.objectID}
           imageURL={obj.primaryImage}
           title={obj.title}
         />
