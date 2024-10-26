@@ -13,7 +13,7 @@ function ObjectCard({ imageURL, title }: Props) {
         <Thumbnail imageURL={imageURL} />
       </section>
       <section className="flex flex-col flex-1">
-        <p className="m-4 flex-1">{title}</p>
+        <p className="mx-4 my-2 flex-1">{title}</p>
         <button className="border rounded px-2 h-8 mx-auto enabled:hover:shadow enabled:active:shadow-inner">
           Add to Collection
         </button>

@@ -19,8 +19,6 @@ function ObjectList({ searchResult, setLoading }: Props) {
     setObjects([]);
     const start = (page - 1) * pageSize + 1;
     const end = start + pageSize;
-    console.log(pageSize, page);
-    console.log(searchResult.objectIDs.length);
 
     Promise.all(
       searchResult.objectIDs.slice(start, end).map(getObjectByID)
@@ -54,7 +52,7 @@ function ObjectList({ searchResult, setLoading }: Props) {
     });
   }
 
-  function failedToLoad() {
+  function failedToLoad(): number {
     let count = 0;
     for (const obj of objects) {
       if (obj === null) count++;
@@ -63,7 +61,15 @@ function ObjectList({ searchResult, setLoading }: Props) {
   }
 
   function selectPageSize(event: SelectEvent) {
-    setPageSize(+event.target.value);
+    const newPageSize = +event.target.value;
+    setPageSize(newPageSize);
+    setPage(Math.min(page, maxPage(newPageSize)));
+  }
+
+  function maxPage(newPageSize: number = 0): number {
+    return Math.ceil(
+      searchResult.total / (newPageSize ? newPageSize : pageSize)
+    );
   }
 
   return (
@@ -82,13 +88,14 @@ function ObjectList({ searchResult, setLoading }: Props) {
           <option value="20">20</option>
         </select>
       </section>
+      <PageButtons maxPage={maxPage()} page={page} setPage={setPage} />
       <ol className="flex flex-col gap-y-2 mx-2">{objectsToElements()}</ol>
       {objects.includes(null) && (
         <p>
           {failedToLoad()} object{failedToLoad() > 1 ? "s" : ""} failed to load
         </p>
       )}
-      <PageButtons page={page} setPage={setPage} />
+      <PageButtons maxPage={maxPage()} page={page} setPage={setPage} />
     </>
   );
 }
