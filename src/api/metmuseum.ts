@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import axiosRateLimit from "axios-rate-limit";
 
-import * as types from "./sciencemuseumtypes";
+import * as types from "./metmuseumtypes";
 
 const axiosInstance = axios.create({
   baseURL: "https://collectionapi.metmuseum.org/public/collection/v1",
@@ -21,8 +21,6 @@ export function object(objectId: number): Promise<types.Object> {
   return api
     .get(`/objects/${objectId}`)
     .then((response) => {
-        console.log(response.data);
-        
       return response.data;
     })
     .catch((error: AxiosError) => {
@@ -40,8 +38,6 @@ export function departments(): Promise<types.Departments> {
 
 export function search(query: string): Promise<types.Search> {
   return api.get(`/search?q=${query}&hasImages=true`).then((response) => {
-    console.log(response.data);
-
     return response.data;
   });
 }
