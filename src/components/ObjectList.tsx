@@ -25,7 +25,7 @@ function ObjectList({ searchResult, setLoading }: Props) {
     ).then(() => {
       setLoading(false);
     });
-  }, [searchResult, page, pageSize]);
+  }, [searchResult, page, pageSize, setLoading]);
 
   function getObjectByID(objectID: number, index: number) {
     object(objectID).then((data) => {
@@ -45,7 +45,7 @@ function ObjectList({ searchResult, setLoading }: Props) {
       return (
         <ObjectCard
           key={obj.objectID.toString()}
-          id={obj.objectID}
+          objectId={obj.objectID}
           imageURL={obj.primaryImage}
           title={obj.title}
         />
@@ -67,10 +67,8 @@ function ObjectList({ searchResult, setLoading }: Props) {
     setPage(Math.min(page, maxPage(newPageSize)));
   }
 
-  function maxPage(newPageSize: number = 0): number {
-    return Math.ceil(
-      searchResult.total / (newPageSize ? newPageSize : pageSize)
-    );
+  function maxPage(newPageSize?: number): number {
+    return Math.ceil(searchResult.total / (newPageSize || pageSize));
   }
 
   return (

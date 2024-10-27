@@ -1,32 +1,27 @@
-import { useContext } from "react";
+import { useCollection } from "../utils/contexts";
+
 import Thumbnail from "./Thumbnail";
-import {
-  CollContextType,
-  CollectionContext,
-} from "../contexts/CollectionContext";
 
 type Props = {
   key: string;
-  id: number;
+  objectId: number;
   imageURL: string;
   title: string;
 };
 
-function ObjectCard({ id, imageURL, title }: Props) {
-  const { collection, setCollection } = useContext(
-    CollectionContext
-  ) as CollContextType;
+function ObjectCard({ objectId, imageURL, title }: Props) {
+  const { collection, setCollection } = useCollection();
 
   function addToCollection() {
-    setCollection((coll) => [...coll, id]);
+    setCollection((coll) => [...coll, objectId]);
   }
 
   function removeFromCollection() {
-    setCollection((coll) => coll.filter((obj) => obj !== id));
+    setCollection((coll) => coll.filter((id) => id !== objectId));
   }
 
   function inCollection() {
-    return collection.includes(id);
+    return collection.includes(objectId);
   }
 
   return (
