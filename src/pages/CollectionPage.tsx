@@ -10,7 +10,7 @@ function CollectionPage() {
 
   const searchResult = { objectIDs: collection, total: collection.length };
 
-  return <ObjectList searchResult={searchResult} setLoading={() => false} />;
+  return <ObjectList searchResult={searchResult} />;
 }
 
 export default CollectionPage;

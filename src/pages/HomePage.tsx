@@ -17,7 +17,7 @@ function HomePage() {
     <section className="flex flex-col items-center">
       <SearchBar setSearchedObjects={setSearchResult} setLoading={setLoading} />
       {loading ? <Loading /> : null}
-      <ObjectList searchResult={searchResult} setLoading={setLoading} />
+      <ObjectList searchResult={searchResult} />
     </section>
   );
 }

@@ -1,13 +1,12 @@
 import { ChangeEvent, ReactElement, useState } from "react";
 
-import { SetState } from "../utils/types";
 import { Search } from "../api/metmuseum";
 
 import ObjectCard from "./ObjectCard";
 import PageButtons from "./PageButtons";
 
 type SelectEvent = ChangeEvent<HTMLSelectElement>;
-type Props = { searchResult: Search; setLoading: SetState<boolean> };
+type Props = { searchResult: Search; };
 
 function ObjectList({ searchResult }: Props) {
   const [pageSize, setPageSize] = useState<number>(5);
@@ -35,6 +34,10 @@ function ObjectList({ searchResult }: Props) {
 
   function maxPage(newPageSize?: number): number {
     return Math.ceil(searchResult.total / (newPageSize || pageSize));
+  }
+  
+  if (searchResult.total === 0) {
+    return null;
   }
 
   return (
