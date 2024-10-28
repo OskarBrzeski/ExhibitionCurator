@@ -22,9 +22,7 @@ function ObjectCard({ objectId, source }: Props) {
       .then((data) => {
         setObject(data);
       })
-      .catch((err) => {
-        console.log(err);
-
+      .catch(() => {
         setError(`Failed to Load`);
       });
   }, [objectId, source]);

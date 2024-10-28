@@ -8,12 +8,18 @@ import PageButtons from "./PageButtons";
 
 type SelectEvent = ChangeEvent<HTMLSelectElement>;
 type Props = {
+  loadingPage: boolean;
   searchResult: Search;
   searchParams: URLSearchParams;
   setSearchParams: SetURLSearchParams;
 };
 
-function ObjectList({ searchResult, searchParams, setSearchParams }: Props) {
+function ObjectList({
+  loadingPage,
+  searchResult,
+  searchParams,
+  setSearchParams,
+}: Props) {
   function renderObjectCards(): (ReactElement | null)[] {
     return searchResult.objects.map(({ objectId, source }) => {
       return (
@@ -85,6 +91,7 @@ function ObjectList({ searchResult, searchParams, setSearchParams }: Props) {
         </select>
       </section>
       <PageButtons
+        loadingPage={loadingPage}
         page={getPage()}
         maxPage={maxPage()}
         prevPage={prevPage}
@@ -94,6 +101,7 @@ function ObjectList({ searchResult, searchParams, setSearchParams }: Props) {
         {renderObjectCards()}
       </ol>
       <PageButtons
+        loadingPage={loadingPage}
         page={getPage()}
         maxPage={maxPage()}
         prevPage={prevPage}

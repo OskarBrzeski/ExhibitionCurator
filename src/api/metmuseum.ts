@@ -38,15 +38,17 @@ export function getSearchByQuery(
   pagesize: number,
   page: number
 ): Promise<Search> {
-  return api.get(`/search?q=${query}&hasImages=true`).then((response) => {
-    const start = (page - 1) * pagesize;
-    const end = start + pagesize;
+  return api
+    .get(`/search`, { params: { q: query, hasImages: true } })
+    .then((response) => {
+      const start = (page - 1) * pagesize;
+      const end = start + pagesize;
 
-    return {
-      objects: response.data.objectIDs.slice(start, end).map((id: number) => {
-        return { source: "met", objectId: id };
-      }),
-      total: response.data.total,
-    } as Search;
-  });
+      return {
+        objects: response.data.objectIDs.slice(start, end).map((id: number) => {
+          return { source: "met", objectId: id };
+        }),
+        total: response.data.total,
+      } as Search;
+    });
 }

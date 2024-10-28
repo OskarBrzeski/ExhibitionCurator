@@ -8,25 +8,37 @@ import ObjectList from "../components/ObjectList";
 function ResultsPage() {
   const { source } = useParams<{ source: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchResult, setSearchResult] = useState<Search>({
-    objects: [],
-    total: 0,
-  });
+  const [searchResult, setSearchResult] = useState<Search | null>(null);
+  const [loadingPage, setLoadingPage] = useState<boolean>(false);
 
   useEffect(() => {
+    setLoadingPage(true);
+
     getSearchByQuery(
       source!,
       searchParams.get("q")!,
       +searchParams.get("pagesize")!,
       +searchParams.get("page")!
-    ).then((data) => {
-      console.log(data);
-      setSearchResult(data);
-    });
+    )
+      .then((data) => {
+        setSearchResult(data);
+      })
+      .finally(() => {
+        setLoadingPage(false);
+      });
   }, [searchParams, source]);
+  
+  if (searchResult === null) {
+    return <p>Loading ...</p>
+  }
+  
+  if (searchResult.total === 0) {
+    return <p>No objects fit search criteria</p>
+  }
 
   return (
     <ObjectList
+      loadingPage={loadingPage}
       searchResult={searchResult}
       searchParams={searchParams}
       setSearchParams={setSearchParams}

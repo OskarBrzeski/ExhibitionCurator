@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import {
   CollContextType,
@@ -7,10 +7,12 @@ import {
 } from "../contexts/CollectionContext";
 
 import ObjectList from "../components/ObjectList";
+import { encodeObjects } from "../utils/base64";
 
 function CollectionPage() {
   const { collection } = useContext(CollectionContext) as CollContextType;
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const pagesize = +searchParams.get("pagesize")!;
   const page = +searchParams.get("page")!;
@@ -23,12 +25,27 @@ function CollectionPage() {
     total: collection.length,
   };
 
+  function becomeExhibiton() {
+    const encodedData = encodeObjects(collection);
+    navigate(`/exhibition/${encodedData}`);
+  }
+
+  if (collection.length === 0) {
+    return <p>Collection is empty</p>;
+  }
+
   return (
-    <ObjectList
-      searchResult={searchResult}
-      searchParams={searchParams}
-      setSearchParams={setSearchParams}
-    />
+    <>
+      <ObjectList
+        loadingPage={false}
+        searchResult={searchResult}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+      />
+      <button className="border rounded p-2" onClick={becomeExhibiton}>
+        Share as Exhibition
+      </button>
+    </>
   );
 }
 

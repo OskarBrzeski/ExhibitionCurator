@@ -1,11 +1,18 @@
 type Props = {
+  loadingPage: boolean;
   page: number;
   maxPage: number;
   prevPage: () => void;
   nextPage: () => void;
 };
 
-function PageButtons({ page, maxPage, prevPage, nextPage }: Props) {
+function PageButtons({
+  loadingPage,
+  page,
+  maxPage,
+  prevPage,
+  nextPage,
+}: Props) {
   return (
     <section className="flex justify-between px-2 my-2 w-full">
       <button
@@ -15,7 +22,9 @@ function PageButtons({ page, maxPage, prevPage, nextPage }: Props) {
       >
         Previous Page
       </button>
-      <span className="py-1">{page}</span>
+      <span className="py-1">
+        {(loadingPage ? "Loading page " : "") + page}
+      </span>
       <button
         className="border rounded w-1/3 px-2 py-1 disabled:text-gray-500 enabled:hover:shadow enabled:active:shadow-inner"
         disabled={page >= maxPage}

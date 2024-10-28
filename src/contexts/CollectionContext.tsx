@@ -1,11 +1,6 @@
 import { createContext, ReactElement, useState } from "react";
 
-import { SetState } from "../utils/types";
-
-type BasicObject = {
-  source: string;
-  objectId: number;
-};
+import { BasicObject, SetState } from "../utils/types";
 
 export type CollContextType = {
   collection: BasicObject[];
