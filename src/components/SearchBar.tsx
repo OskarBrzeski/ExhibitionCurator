@@ -1,8 +1,7 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-type SubmitEvent = FormEvent<HTMLFormElement>;
-type SelectEvent = ChangeEvent<HTMLSelectElement>;
+import { SelectEvent, SubmitEvent } from "../utils/types";
 
 function SearchBar() {
   const [searchTerms, setSearchTerms] = useState<string>("");

@@ -27,7 +27,7 @@ function CollectionPage() {
 
   function becomeExhibiton() {
     const encodedData = encodeObjects(collection);
-    navigate(`/exhibition/${encodedData}`);
+    navigate(`/exhibition?id=${encodedData}`);
   }
 
   if (collection.length === 0) {
