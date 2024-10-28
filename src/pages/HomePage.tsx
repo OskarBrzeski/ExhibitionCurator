@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Search } from "../api/metmuseumtypes";
+import { Search } from "../api/metmuseum";
 
 import Loading from "../components/Loading";
 import ObjectList from "../components/ObjectList";
