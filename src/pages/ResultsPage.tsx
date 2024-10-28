@@ -1,11 +1,13 @@
-import { useParams, useSearchParams } from "react-router-dom";
-import ObjectList from "../components/ObjectList";
 import { useEffect, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
+
 import { getSearchByQuery, Search } from "../api/api";
 
+import ObjectList from "../components/ObjectList";
+
 function ResultsPage() {
-  const { source } = useParams();
-  const [searchParams, _] = useSearchParams();
+  const { source } = useParams<{ source: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchResult, setSearchResult] = useState<Search>({
     objects: [],
     total: 0,
@@ -21,18 +23,15 @@ function ResultsPage() {
       console.log(data);
       setSearchResult(data);
     });
-  }, [searchParams]);
+  }, [searchParams, source]);
 
-  //   function nextPage() {
-  //     const newQuery = {
-  //       q: searchParams.get("q")!,
-  //       pagesize: searchParams.get("pagesize")!,
-  //       page: +searchParams.get("page")! + 1,
-  //     };
-  //     setSearchParams(newQuery);
-  //   }
-
-  return <ObjectList searchResult={searchResult} />;
+  return (
+    <ObjectList
+      searchResult={searchResult}
+      searchParams={searchParams}
+      setSearchParams={setSearchParams}
+    />
+  );
 }
 
 export default ResultsPage;

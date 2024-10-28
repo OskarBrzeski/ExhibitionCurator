@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-import { useCollection } from "../utils/contexts";
 import { getObjectById, Object } from "../api/api";
+import { useCollection } from "../utils/contexts";
 
 import Thumbnail from "./Thumbnail";
 
@@ -22,10 +22,12 @@ function ObjectCard({ objectId, source }: Props) {
       .then((data) => {
         setObject(data);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
+
         setError(`Failed to Load`);
       });
-  }, [objectId]);
+  }, [objectId, source]);
 
   function addToCollection() {
     setCollection((coll) => [...coll, { source, objectId }]);
@@ -35,8 +37,8 @@ function ObjectCard({ objectId, source }: Props) {
     setCollection((coll) => coll.filter((obj) => obj.objectId !== objectId));
   }
 
-  function inCollection() {
-    for (let obj of collection) {
+  function inCollection(): boolean {
+    for (const obj of collection) {
       if (obj.objectId === objectId && obj.source === source) {
         return true;
       }
@@ -55,13 +57,13 @@ function ObjectCard({ objectId, source }: Props) {
   return (
     <li className="border rounded flex p-2">
       <Link
-        to={`/object/${objectId}`}
+        to={`/object/${source}/${objectId}`}
         className="w-2/5 max-w-28 h-28 flex-none"
       >
         <Thumbnail imageURL={object.primaryImageSmall} />
       </Link>
       <section className="flex flex-col flex-1">
-        <Link to={`/object/${objectId}`} className="mx-4 my-2 flex-1">
+        <Link to={`/object/${source}/${objectId}`} className="mx-4 my-2 flex-1">
           {object.title}
         </Link>
         <button

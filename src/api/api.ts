@@ -1,5 +1,5 @@
-import * as metmuseum from "./metmuseum";
 import * as clemuseum from "./clemuseum";
+import * as metmuseum from "./metmuseum";
 
 type apiModule = {
   getObjectById: (objectId: number) => Promise<Object>;
@@ -36,7 +36,7 @@ export function getObjectById(
 }
 
 export type Search = {
-  objects: {source: string, objectId: number}[];
+  objects: { source: string; objectId: number }[];
   total: number;
 };
 
@@ -45,6 +45,6 @@ export function getSearchByQuery(
   query: string,
   pagesize: number,
   page: number
-) {
+): Promise<Search> {
   return api[source].getSearchByQuery(query, pagesize, page);
 }

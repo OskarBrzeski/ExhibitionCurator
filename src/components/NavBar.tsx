@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 
 function NavBar() {
   return (
-    <header>
-      <nav className="flex gap-4 justify-center">
-        <Link to="/">Home</Link>
-        <Link to="/collection">My Collection</Link>
+    <header className="border-b-2 mt-2 mb-4 mx-2">
+      <nav className="flex gap-6 justify-center">
+        <Link to="/">Search</Link>
+        <Link to="/collection?pagesize=5&page=1">My Collection</Link>
       </nav>
     </header>
   );

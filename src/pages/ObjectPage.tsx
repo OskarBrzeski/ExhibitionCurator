@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import Loading from "../components/Loading";
 import { getObjectById, Object } from "../api/api";
 
-type ObjectParams = { objectId: string };
+import Loading from "../components/Loading";
+
+type ObjectParams = { objectId: string; source: string };
 
 function ObjectPage() {
-  const { objectId } = useParams<ObjectParams>();
+  const { objectId, source } = useParams<ObjectParams>();
   const [object, setObject] = useState<Object | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
@@ -15,8 +16,8 @@ function ObjectPage() {
   useEffect(() => {
     setLoading(true);
 
-    if (objectId === undefined) {
-      setErrorMsg("ID is undefined; this should never occur");
+    if (objectId === undefined || source === undefined) {
+      setErrorMsg("found undefined; this should never occur");
       setLoading(false);
       return;
     }
@@ -27,7 +28,7 @@ function ObjectPage() {
       return;
     }
 
-    getObjectById("met", +objectId)
+    getObjectById(source, +objectId)
       .then((data) => {
         console.log(data);
 
@@ -39,7 +40,7 @@ function ObjectPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [objectId]);
+  }, [objectId, source]);
 
   if (loading) {
     return <Loading />;

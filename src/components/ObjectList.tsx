@@ -1,4 +1,5 @@
-import { ChangeEvent, ReactElement, useState } from "react";
+import { ChangeEvent, ReactElement } from "react";
+import { SetURLSearchParams } from "react-router-dom";
 
 import { Search } from "../api/api";
 
@@ -6,14 +7,15 @@ import ObjectCard from "./ObjectCard";
 import PageButtons from "./PageButtons";
 
 type SelectEvent = ChangeEvent<HTMLSelectElement>;
-type Props = { searchResult: Search };
+type Props = {
+  searchResult: Search;
+  searchParams: URLSearchParams;
+  setSearchParams: SetURLSearchParams;
+};
 
-function ObjectList({ searchResult }: Props) {
-  const [pageSize, setPageSize] = useState<number>(5);
-  const [page, setPage] = useState<number>(1);
-
+function ObjectList({ searchResult, searchParams, setSearchParams }: Props) {
   function renderObjectCards(): (ReactElement | null)[] {
-    return searchResult.objects.map(({objectId, source}) => {
+    return searchResult.objects.map(({ objectId, source }) => {
       return (
         <ObjectCard
           key={objectId.toString()}
@@ -26,16 +28,43 @@ function ObjectList({ searchResult }: Props) {
 
   function selectPageSize(event: SelectEvent) {
     const newPageSize = +event.target.value;
-    setPageSize(newPageSize);
-    setPage(Math.min(page, maxPage(newPageSize)));
+    const newPage = Math.min(getPage(), maxPage(newPageSize));
+
+    setSearchParams((prev: URLSearchParams) => {
+      prev.set("pagesize", newPageSize.toString());
+      prev.set("page", newPage.toString());
+      return prev;
+    });
   }
 
   function maxPage(newPageSize?: number): number {
-    return Math.ceil(searchResult.total / (newPageSize || pageSize));
+    return Math.ceil(searchResult.total / (newPageSize || getPagesize()));
   }
-  
+
+  function nextPage() {
+    setSearchParams((prev: URLSearchParams) => {
+      prev.set("page", Math.min(getPage() + 1, maxPage()).toString());
+      return prev;
+    });
+  }
+
+  function prevPage() {
+    setSearchParams((prev: URLSearchParams) => {
+      prev.set("page", Math.max(getPage() - 1, 1).toString());
+      return prev;
+    });
+  }
+
+  function getPage(): number {
+    return +searchParams.get("page")!;
+  }
+
+  function getPagesize(): number {
+    return +searchParams.get("pagesize")!;
+  }
+
   if (searchResult.total === 0) {
-    return null;
+    return <p>Loading ...</p>;
   }
 
   return (
@@ -47,6 +76,7 @@ function ObjectList({ searchResult }: Props) {
           name="pagesize"
           id="pagesize"
           onChange={selectPageSize}
+          value={getPagesize()}
         >
           <option value="5">5</option>
           <option value="10">10</option>
@@ -54,9 +84,21 @@ function ObjectList({ searchResult }: Props) {
           <option value="20">20</option>
         </select>
       </section>
-      <PageButtons maxPage={maxPage()} page={page} setPage={setPage} />
-      <ol className="flex flex-col gap-y-2 px-2 w-full">{renderObjectCards()}</ol>
-      <PageButtons maxPage={maxPage()} page={page} setPage={setPage} />
+      <PageButtons
+        page={getPage()}
+        maxPage={maxPage()}
+        prevPage={prevPage}
+        nextPage={nextPage}
+      />
+      <ol className="flex flex-col gap-y-2 px-2 w-full">
+        {renderObjectCards()}
+      </ol>
+      <PageButtons
+        page={getPage()}
+        maxPage={maxPage()}
+        prevPage={prevPage}
+        nextPage={nextPage}
+      />
     </>
   );
 }

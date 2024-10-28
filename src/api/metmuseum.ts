@@ -1,5 +1,6 @@
 import axios from "axios";
 import axiosRateLimit from "axios-rate-limit";
+
 import { Object, Search } from "./api";
 
 const axiosInstance = axios.create({
@@ -9,14 +10,6 @@ const api = axiosRateLimit(axiosInstance, {
   maxRequests: 60,
   perMilliseconds: 1000,
 });
-
-export type Objects = number[];
-
-export function getObjects(): Promise<Objects> {
-  return api.get("/objects").then((response) => {
-    return response.data.objectIDs;
-  });
-}
 
 export function getObjectById(objectId: number): Promise<Object> {
   return api.get(`/objects/${objectId}`).then((response) => {
@@ -39,22 +32,6 @@ export function getObjectById(objectId: number): Promise<Object> {
     } as Object;
   });
 }
-
-export type Departments = {
-  departmentId: number;
-  displayName: string;
-}[];
-
-export function getDepartments(): Promise<Departments> {
-  return api.get("/departments").then((response) => {
-    return response.data.departments;
-  });
-}
-
-// export type Search = {
-//   objectIDs: number[];
-//   total: number;
-// };
 
 export function getSearchByQuery(
   query: string,
