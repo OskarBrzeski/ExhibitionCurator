@@ -1,5 +1,5 @@
 import * as metmuseum from "./metmuseum";
-import * as vamuseum from "./vamuseum";
+import * as vamuseum from "./clemuseum";
 
 type apiModule = {
   getObjectById: (objectId: number) => Promise<Object>;
