@@ -1,8 +1,7 @@
 import { FormEvent, ReactElement, useState } from "react";
 
 import { SetState } from "../utils/types";
-import { search } from "../api/metmuseum";
-import { Search } from "../api/metmuseumtypes";
+import { getSearchByQuery, Search } from "../api/metmuseum";
 
 type SubmitEvent = FormEvent<HTMLFormElement>;
 type Props = {
@@ -17,12 +16,11 @@ function SearchBar({ setSearchedObjects, setLoading }: Props): ReactElement {
     event.preventDefault();
     setLoading(true);
 
-    search(searchTerms)
+    getSearchByQuery(searchTerms)
       .then((result) => {
         setSearchedObjects(result);
       })
-      .catch((e) => {
-        console.log(e);
+      .finally(() => {
         setLoading(false);
       });
   }

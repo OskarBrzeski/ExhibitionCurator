@@ -1,8 +1,7 @@
-import { ChangeEvent, ReactElement, useEffect, useState } from "react";
+import { ChangeEvent, ReactElement, useState } from "react";
 
 import { SetState } from "../utils/types";
-import { object } from "../api/metmuseum";
-import { Object, Search } from "../api/metmuseumtypes";
+import { Search } from "../api/metmuseum";
 
 import ObjectCard from "./ObjectCard";
 import PageButtons from "./PageButtons";
@@ -10,55 +9,22 @@ import PageButtons from "./PageButtons";
 type SelectEvent = ChangeEvent<HTMLSelectElement>;
 type Props = { searchResult: Search; setLoading: SetState<boolean> };
 
-function ObjectList({ searchResult, setLoading }: Props) {
-  const [objects, setObjects] = useState<(Object | null)[]>([]);
+function ObjectList({ searchResult }: Props) {
   const [pageSize, setPageSize] = useState<number>(5);
   const [page, setPage] = useState<number>(1);
 
-  useEffect(() => {
-    setObjects([]);
+  function renderObjectCards(): (ReactElement | null)[] {
     const start = (page - 1) * pageSize;
     const end = start + pageSize;
 
-    Promise.all(
-      searchResult.objectIDs.slice(start, end).map(getObjectByID)
-    ).then(() => {
-      setLoading(false);
-    });
-  }, [searchResult, page, pageSize, setLoading]);
-
-  function getObjectByID(objectID: number, index: number) {
-    object(objectID).then((data) => {
-      setObjects((objects) => {
-        const newObjects = objects.slice();
-        newObjects[index] = data;
-        return newObjects;
-      });
-    });
-  }
-
-  function objectsToElements(): (ReactElement | null)[] {
-    return objects.map((obj) => {
-      if (obj === null) {
-        return null;
-      }
+    return searchResult.objectIDs.slice(start, end).map((objectId) => {
       return (
         <ObjectCard
-          key={obj.objectID.toString()}
-          objectId={obj.objectID}
-          imageURL={obj.primaryImage}
-          title={obj.title}
+          key={objectId.toString()}
+          objectId={objectId}
         />
       );
     });
-  }
-
-  function failedToLoad(): number {
-    let count = 0;
-    for (const obj of objects) {
-      if (obj === null) count++;
-    }
-    return count;
   }
 
   function selectPageSize(event: SelectEvent) {
@@ -88,12 +54,7 @@ function ObjectList({ searchResult, setLoading }: Props) {
         </select>
       </section>
       <PageButtons maxPage={maxPage()} page={page} setPage={setPage} />
-      <ol className="flex flex-col gap-y-2 mx-2">{objectsToElements()}</ol>
-      {objects.includes(null) && (
-        <p>
-          {failedToLoad()} object{failedToLoad() > 1 ? "s" : ""} failed to load
-        </p>
-      )}
+      <ol className="flex flex-col gap-y-2 px-2 w-full">{renderObjectCards()}</ol>
       <PageButtons maxPage={maxPage()} page={page} setPage={setPage} />
     </>
   );
