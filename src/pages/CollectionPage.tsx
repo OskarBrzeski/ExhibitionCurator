@@ -8,7 +8,7 @@ import {
 function CollectionPage() {
   const { collection } = useContext(CollectionContext) as CollContextType;
 
-  const searchResult = { objectIDs: collection, total: collection.length };
+  const searchResult = { objects: collection, total: collection.length };
 
   return <ObjectList searchResult={searchResult} />;
 }

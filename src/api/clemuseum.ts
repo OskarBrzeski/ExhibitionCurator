@@ -12,7 +12,7 @@ const api = axiosRateLimit(axiosInstance, {
 });
 
 export function getObjectById(objectId: number): Promise<Object> {
-    return api.get(`/museumobject/${objectId}`).then((response) => {
+    return api.get(`/artworks/${objectId}`).then((response) => {
         console.log(response.data);
         
         const obj = response.data

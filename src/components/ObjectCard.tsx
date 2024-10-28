@@ -9,33 +9,39 @@ import Thumbnail from "./Thumbnail";
 type Props = {
   key: string;
   objectId: number;
+  source: string;
 };
 
-function ObjectCard({ objectId }: Props) {
+function ObjectCard({ objectId, source }: Props) {
   const { collection, setCollection } = useCollection();
   const [object, setObject] = useState<Object | null>(null);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    getObjectById("met", objectId)
+    getObjectById(source, objectId)
       .then((data) => {
         setObject(data);
       })
       .catch(() => {
-        setError(`Failed to Load`)
+        setError(`Failed to Load`);
       });
   }, [objectId]);
 
   function addToCollection() {
-    setCollection((coll) => [...coll, objectId]);
+    setCollection((coll) => [...coll, { source, objectId }]);
   }
 
   function removeFromCollection() {
-    setCollection((coll) => coll.filter((id) => id !== objectId));
+    setCollection((coll) => coll.filter((obj) => obj.objectId !== objectId));
   }
 
   function inCollection() {
-    return collection.includes(objectId);
+    for (let obj of collection) {
+      if (obj.objectId === objectId && obj.source === source) {
+        return true;
+      }
+    }
+    return false;
   }
 
   if (object === null) {

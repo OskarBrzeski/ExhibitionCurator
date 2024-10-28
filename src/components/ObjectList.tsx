@@ -1,25 +1,23 @@
 import { ChangeEvent, ReactElement, useState } from "react";
 
-import { Search } from "../api/metmuseum";
+import { Search } from "../api/api";
 
 import ObjectCard from "./ObjectCard";
 import PageButtons from "./PageButtons";
 
 type SelectEvent = ChangeEvent<HTMLSelectElement>;
-type Props = { searchResult: Search; };
+type Props = { searchResult: Search };
 
 function ObjectList({ searchResult }: Props) {
   const [pageSize, setPageSize] = useState<number>(5);
   const [page, setPage] = useState<number>(1);
 
   function renderObjectCards(): (ReactElement | null)[] {
-    const start = (page - 1) * pageSize;
-    const end = start + pageSize;
-
-    return searchResult.objectIDs.slice(start, end).map((objectId) => {
+    return searchResult.objects.map(({objectId, source}) => {
       return (
         <ObjectCard
           key={objectId.toString()}
+          source={source}
           objectId={objectId}
         />
       );
