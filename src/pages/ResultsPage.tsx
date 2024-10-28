@@ -5,7 +5,7 @@ import { getSearchByQuery, Search } from "../api/api";
 
 function ResultsPage() {
   const { source } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, _] = useSearchParams();
   const [searchResult, setSearchResult] = useState<Search>({
     objects: [],
     total: 0,
@@ -23,14 +23,14 @@ function ResultsPage() {
     });
   }, [searchParams]);
 
-  /* function nextPage() {
-    const newQuery = {
-      q: searchParams.get("q")!,
-      pagesize: searchParams.get("pagesize")!,
-      page: +searchParams.get("page")! + 1,
-    };
-    setSearchParams(newQuery);
-  } */
+  //   function nextPage() {
+  //     const newQuery = {
+  //       q: searchParams.get("q")!,
+  //       pagesize: searchParams.get("pagesize")!,
+  //       page: +searchParams.get("page")! + 1,
+  //     };
+  //     setSearchParams(newQuery);
+  //   }
 
   return <ObjectList searchResult={searchResult} />;
 }
