@@ -5,13 +5,16 @@ import { decodeObjects } from "../utils/base64";
 import { BasicObject, SubmitEvent } from "../utils/types";
 
 import ObjectCard from "../components/ObjectCard";
+import ExhibitionId from "../components/ExhibitionId";
 
 function ExhibitionPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [exhibId, setExhibId] = useState<string>("");
 
+  const exhibitionId = searchParams.get("id");
+
   function renderObjects() {
-    const objects = decodeObjects(searchParams.get("id")!);
+    const objects = decodeObjects(exhibitionId!);
     return objects.map((obj: BasicObject) => {
       return (
         <ObjectCard
@@ -52,6 +55,7 @@ function ExhibitionPage() {
   return (
     <>
       <h1 className="text-4xl font-bold text-center m-4">Exhibition</h1>
+      <ExhibitionId exhibId={exhibitionId} />
       <ol className="flex flex-col gap-2">{renderObjects()}</ol>
     </>
   );
