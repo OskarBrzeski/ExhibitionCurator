@@ -18,7 +18,7 @@ function ExhibitionId({ exhibId }: Props) {
       <textarea
         className="border rounded w-full mb-1"
         value={`${exhibId}`}
-        rows="1"
+        rows={1}
         disabled
         readOnly
       />

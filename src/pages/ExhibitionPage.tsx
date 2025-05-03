@@ -35,7 +35,7 @@ function ExhibitionPage() {
     });
   }
 
-  if (searchParams.get("id") === null) {
+  if (exhibitionId === null) {
     return (
       <form className="flex flex-col gap-2" action="" onSubmit={handleSubmit}>
         <label htmlFor="exhib">Enter Exhibition ID</label>
